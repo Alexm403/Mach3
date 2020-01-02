@@ -1,0 +1,55 @@
+'Rem	Probe Down by Blue sky tec.
+'FeedCurrent = GetOemDRO(818) 	'Get the current settings
+'ZCurrent = GetDro(2)
+'Code "G4 P1"			'Pause 1 second to give time to position probe plate
+'Code "F50"			'slow feed rate to 20 MM/MIN
+'GageH = GetOEMDRO (1002)
+Rem	Probe Down by Blue sky tec.
+'FeedCurrent = GetOemDRO(818) 	'Get the current settings
+'ZCurrent = GetOemDro(802)
+'Code "G4 P1"			'Pause 1 second to give time to position probe plate
+'Code "F50"			'slow feed rate to 20 MM/MIN
+'GageH = GetUserDRO(1152)
+'GageH = Abs(GetOEMDRO(1001))
+'ZNew = ZCurrent - 30		'probe down 30mm 
+'Code "G31 Z" &ZNew
+'While IsMoving()
+'Wend
+'Call SetDro (2,GageH)
+'FinalMove = GageH * 1
+'Code  "G0 Z" &FinalMove
+'Code  "G0 Z" &30
+'Code "F" &FeedCurrent  		'restore starting    
+
+
+
+
+
+Code "F50"
+ZCurrent = GetDro(2)
+ZNew = ZCurrent - 100		'probe down 100mm 
+Code "F1000"
+Code "G31 Z" &ZNew
+While IsMoving()
+Wend
+
+ZCurrent = GetDro(2)
+ZNew = ZCurrent + 1		'probe down 30mm 
+Code "G0 Z" &ZNew
+While IsMoving()
+Wend
+
+ZCurrent = GetDro(2)
+ZNew = ZCurrent - 2		'probe down 30mm 
+Code "F50"
+Code "G31 Z" &ZNew
+While IsMoving()
+Wend
+
+ZCurrent = GetDro(2)
+ZNew = ZCurrent + 48
+Code "G0 Z" &ZNew
+While IsMoving()
+Wend
+
+Call SetDro (2,0)
