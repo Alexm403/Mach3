@@ -1,0 +1,135 @@
+Code "G31 Y-1000 F100" ' двигаться по -Y на 1м до касания щупом  
+While IsMoving() 
+Wend ' дождаться конца движения
+
+SetDRO(1,0) ' обнулить данные в окне Y
+Code "G04 p0.25" ' пауза 0.5 с
+Code "G01 Y0.25" ' отъехать от стенки
+Code "G04 p0.25" ' пауза 0.5 с   
+Code "G31 Y1000" ' двигаться по +Y на 1м до касания щупом
+While IsMoving() 
+Wend ' дождаться конца движения      
+
+Code "G04 p0.25" ' пауза 0.5 с
+Ynew = GetDRO(1) - 0.25
+Code "G01 Y"&Ynew 
+Ynew = (Ynew+0.25)/2
+Code "G01 Y"&Ynew  
+Code "G04 p0.25" ' пауза 0.5 с
+
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+SetDRO(1, -9.1) ' Y первого калибровочного отверстия
+       
+'Установили нуль по Y.
+
+Code "G04 p0.25" 'пауза 0.5 c
+Code "G31 X-1000 F100" ' двигаться по -Х на 1м до касания щупом  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+
+SetDRO(0,0) ' обнулить данные в окне X
+Code "G04 p0.25" ' пауза 0.5 с
+Code "G01 x0.25" ' отъехать от стенки
+Code "G04 p0.25" ' пауза 0.5 с
+Code "G31 X1000" ' двигаться по +-X на 1м до касания щупом
+While IsMoving() 
+Wend ' дождаться конца движения           
+
+Code "G04 p0.25" ' пауза 0.5 с
+Xnew = GetDRO(0) - 0.25
+Code "G01 x"&Xnew 
+Xnew = (Xnew+0.25)/2
+Code "G01 x"&Xnew  
+
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+SetDRO(0, 15.02) ' X первого калибровочного отверстия
+
+'Установили предварительный нуль по Х.
+
+Code "G00 Z3"  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+Code "G0 X14.86 Y9.1"  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+Code "G01 Z0 F50"  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+
+'---------------------------------------------------------------------------------------------------
+
+Code "G31 Y-1000 F100" ' двигаться по -Y на 1м до касания щупом  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+
+Yknul = GetDRO(1)
+Code "G04 p0.25" ' пауза 0.5 с
+Code "G01 Y" & (Yknul + 0.25)  ' отъехать от стенки
+Code "G04 p0.25" ' пауза 0.5 с   
+
+Code "G31 Y1000" ' двигаться по +Y на 1м до касания щупом
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения      
+
+Code "G04 p0.25" ' пауза 0.5 с
+Yotnul = GetDRO(1)
+Code "G01 Y" & (Yotnul - 0.25)  ' отъехать от стенки
+Ynew = Yknul + ( (Yotnul - Yknul) / 2)
+Code "G01 Y" & Ynew  
+Code "G04 p0.25" ' пауза 0.5 с
+
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+'Установили смещение по Y для второго отверстия.
+
+Code "G31 X-1000 F100" ' двигаться по -X на 1м до касания щупом  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+
+Xknul = GetDRO(0)
+Code "G04 p0.25" ' пауза 0.5 с
+Code "G01 X" & (Xknul + 0.25)  ' отъехать от стенки
+Code "G04 p0.25" ' пауза 0.5 с   
+
+Code "G31 X1000" ' двигаться по +X на 1м до касания щупом
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения      
+
+Code "G04 p0.25" ' пауза 0.5 с
+Xotnul = GetDRO(0)
+Code "G01 X" & (Xotnul - 0.25)  ' отъехать от стенки
+Xnew = Xknul + ( (Xotnul - Xknul) / 2)
+Code "G01 X" & Xnew  
+Code "G04 p0.25" ' пауза 0.5 с
+
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+Установили смещение по Y для второго отверстия.
+
+Code "G00 Z10"  
+While IsMoving() 
+sleep (100)
+Wend ' дождаться конца движения
+
+Xsm = 14.86 - Xnew 
+Del = Xsm / 18.2
+Ug = Atn (Del) * 180 / 3.14
+
+Code "G68 X0 Y0 R" & Ug
+Code "G00 Z120 X130 Y0" 
+
+responde = MsgBox ("Cмещение = " & Xsm & ", A(tg) = " & Del & ", Угол = " & Ug) 
